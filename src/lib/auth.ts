@@ -6,7 +6,7 @@ import { prisma } from "./db";
 import bcrypt from 'bcryptjs'
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import jwt from 'jsonwebtoken'
- 
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GoogleProvider({
@@ -22,36 +22,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing email or password");
         }
-      
+
         const user = await prisma.user.findFirst({
           where: { email: credentials.email },
         });
-      
+
         if (!user) {
           throw new Error("Email not registered");
         }
-      
+
         const isPasswordValid = bcrypt.compareSync(credentials.password, user.password);
         if (!isPasswordValid) {
           throw new Error("Incorrect password");
         }
-      
+
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "shhhhh");
-        
-      const sessions =  await prisma.sessions.create({
+
+        const sessions = await prisma.sessions.create({
           data: {
             token,
             userId: user.id,
           },
         });
-      console.log(sessions,"sessions");
+        console.log(sessions, "sessions");
         return {
           id: user.id,
           email: user.email,
           name: user.userName,
         };
       }
-      
     }),
   ],
   adapter: PrismaAdapter(prisma),
@@ -59,6 +58,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
     maxAge: 10000
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        return {
+          ...token,
+          name: user.name
+        }
+      }
+      return token
+    },
+    async session({ session, token, user }) {
+      return {
+        ...session,
+        user:{
+          ...session.user,
+          name:token.name
+        }
+      }
+      return session
+    }
   },
   pages: {
     signIn: '/sign-in',
