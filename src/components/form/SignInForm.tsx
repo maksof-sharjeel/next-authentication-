@@ -37,17 +37,16 @@ const SignInForm = () => {
 	});
 
 	const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-		console.log(values);
 		const login = await signIn('credentials', {
+			redirect:false,
 			email: values.email,
 			password: values.password,
 		});
-		router.push('/admin')
 		if(login?.error){
 			console.log(login.error);
       
 		}else{
-			router.push('/admin')
+			 router.push('/admin');
 		}
 	};
 
