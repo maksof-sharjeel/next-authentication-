@@ -16,6 +16,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import GoogleSignInButton from '../GoogleSignInButton';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z
 	.object({
@@ -33,6 +34,7 @@ const FormSchema = z
 	});
 
 const SignUpForm = () => {
+	const { toast } = useToast()
   const router =useRouter()
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -60,7 +62,11 @@ const SignUpForm = () => {
       router.push('/sign-in')
     }
     if (!response.ok) {
-      throw new Error('Failed to create user');
+    	toast({
+				title: "Error",
+				description: "Something Went Wrong",
+				variant:'destructive'
+			})
     }
     console.log('User created successfully');
 		console.log(values);
@@ -90,7 +96,7 @@ const SignUpForm = () => {
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input placeholder="mail@example.com" {...field} />
+									<Input placeholder="Enter Your Email" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

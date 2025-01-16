@@ -77,7 +77,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name:token.name
         }
       }
-      return session
     }
   },
   pages: {

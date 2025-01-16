@@ -1,4 +1,6 @@
+'use client'
 import Navbar from '@/components/Navbar';
+import { Toaster } from '@/components/ui/toaster';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
@@ -23,6 +25,7 @@ export default function RootLayout({
 					<SessionProvider>
 					<Navbar />
             {children}
+						<Toaster />
             </SessionProvider>
 				</main>
 			</body>

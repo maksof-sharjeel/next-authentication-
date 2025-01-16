@@ -4,6 +4,7 @@ import { Button, buttonVariants } from './ui/button';
 import { HandMetal } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { UserAccountNav } from './UserAccountNav';
 
 const Navbar = () => {
 	const { data: session } = useSession();
@@ -15,10 +16,7 @@ const Navbar = () => {
 					<HandMetal />
 				</Link>
 				{session?.user ? (
-					<Button  onClick={() => {
-            signOut();
-            router.push('sign-in');
-          }}>Sign Out</Button>
+					<UserAccountNav />
 				) : (
 					<Link className={buttonVariants()} href="/sign-in">
 						Sign in
