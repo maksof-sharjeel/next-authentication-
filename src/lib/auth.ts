@@ -44,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             userId: user.id,
           },
         });
-        console.log(sessions, "sessions");
+        // console.log(sessions, "sessions");
         return {
           id: user.id,
           email: user.email,
