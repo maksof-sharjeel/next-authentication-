@@ -4,10 +4,14 @@ export function middleware(request: NextRequest) {
   const sessionToken = request.cookies.get('authjs.session-token')?.value;
   console.log(sessionToken,"sessionToken");
   if (!sessionToken) {
-    return NextResponse.redirect(new URL('/admin', request.url));
+    const url = request.nextUrl.clone();
+    url.pathname = '/sign-in';
+    url.search = ''; 
+
+    return NextResponse.redirect(url);
   }
   return NextResponse.next();
 }
 export const config = {
-  matcher: '/about/:path*',
+  matcher: '/admin/:path*', 
 };
